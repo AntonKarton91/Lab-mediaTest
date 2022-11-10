@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
 import PaperComponent from "../UI/Paper.Component";
 import TopWindowComponent from "./TopWindow.Component";
 import SortComponent from "./Sort.Component";
 import BottomWindowComponent from "./BottomWindow.Component";
+import {useDispatch} from "react-redux";
+import {fetchUserList} from "../Store/acyncActions/listAcyncActions";
 
 const Container = styled.div`
   width: 961px;
@@ -25,7 +27,14 @@ const Title = styled.h1`
   line-height: 28px;
   color: #333333;
   `
+
+
 const ContainerComponent = () => {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchUserList())
+    }, [])
 
     return (
         <Container>

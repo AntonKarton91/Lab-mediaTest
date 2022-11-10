@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from "styled-components";
 import svg from '../images/source_icons_search.svg'
+import {useDispatch, useSelector} from "react-redux";
+import {setSearchStringAction} from "../Store/UsersSlice";
 
 const SearchStringContainer = styled.div`
   position: absolute;
@@ -42,10 +44,19 @@ const SearchInput = styled.input`
 
 
 const SearchStringComponent = () => {
+    const userList = useSelector(state => state.userList.list)
+    const dispatch = useDispatch()
+    const {page, sortBy, searchBy} = useSelector(state => state.userList)
+
+
+    function searching(str) {
+        dispatch(setSearchStringAction(str))
+    }
+
     return (
         <SearchStringContainer>
             <SearchIcon src={svg} />
-            <SearchInput placeholder={'Поиск по имени или e-mail'}/>
+            <SearchInput placeholder={'Поиск по имени или e-mail'} onChange={e => searching(e.target.value)}/>
         </SearchStringContainer>
     );
 };
