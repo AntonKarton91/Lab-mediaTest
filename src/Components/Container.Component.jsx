@@ -4,16 +4,21 @@ import PaperComponent from "../UI/Paper.Component";
 import TopWindowComponent from "./TopWindow.Component";
 import SortComponent from "./Sort.Component";
 import BottomWindowComponent from "./BottomWindow.Component";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {fetchUserList} from "../Store/acyncActions/listAcyncActions";
+import PopupComponent from "./Popup.Component";
 
 const Container = styled.div`
-  width: 961px;
-  height: 100%;
+  //width: 961px;
+  //height: 100%;
   margin: auto;
+  top: 0;
+  left: 27px;
+  right: 12px;
+  bottom: 0;
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: absolute;
 `
 const Title = styled.h1`
   position: absolute;
@@ -30,6 +35,7 @@ const Title = styled.h1`
 
 
 const ContainerComponent = () => {
+    const {isPopupActive} = useSelector(state => state.userList)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -37,12 +43,18 @@ const ContainerComponent = () => {
     }, [])
 
     return (
-        <Container>
-            <Title>Список пользователей</Title>
-            <TopWindowComponent/>
-            <SortComponent/>
-            <BottomWindowComponent/>
-        </Container>
+        <>
+            <Container>
+                <Title>Список пользователей</Title>
+                <TopWindowComponent/>
+                <SortComponent/>
+                <BottomWindowComponent/>
+            </Container>
+            {
+                isPopupActive && <PopupComponent/>
+            }
+
+        </>
     );
 };
 

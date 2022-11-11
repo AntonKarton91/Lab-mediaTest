@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
+import {useDispatch, useSelector} from "react-redux";
+import SortItem from "../UI/SortItem";
 
 const SortContainer = styled.div`
   display: flex;
@@ -20,18 +22,14 @@ const SortTitle = styled.div`
   margin-right: 9px;
 `
 
-const SortItem = styled.div`
-  color: #333333;
-  border-bottom: 1px dashed;
-  margin-right: 9px;
-`
-
 const SortComponent = () => {
+    const dispatch = useDispatch()
+
     return (
         <SortContainer>
             <SortTitle>Сортировка:</SortTitle>
-            <SortItem>Дата регистрации</SortItem>
-            <SortItem>Рейтинг</SortItem>
+            <SortItem selectType={'Date'}>Дата регистрации</SortItem>
+            <SortItem selectType={'Rating'}>Рейтинг</SortItem>
         </SortContainer>
     );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import styled from "styled-components";
 import svg from '../images/source_icons_search.svg'
 import {useDispatch, useSelector} from "react-redux";
@@ -6,10 +6,10 @@ import {setSearchStringAction} from "../Store/UsersSlice";
 
 const SearchStringContainer = styled.div`
   position: absolute;
-  width: 901px;
   height: 34px;
   left: 16px;
   top: 12px;
+  right: 44px;
   background: #ECEFF0;
   border-radius: 4px;
 `
@@ -46,17 +46,21 @@ const SearchInput = styled.input`
 const SearchStringComponent = () => {
     const userList = useSelector(state => state.userList.list)
     const dispatch = useDispatch()
-    const {page, sortBy, searchBy} = useSelector(state => state.userList)
+    const {searchBy} = useSelector(state => state.userList)
+    const ref = useRef()
 
 
-    function searching(str) {
-        dispatch(setSearchStringAction(str))
-    }
+    useEffect(() => {
+        if (!searchBy) {
+            ref.current.value = ''
+        }
+    }, [searchBy])
 
     return (
         <SearchStringContainer>
             <SearchIcon src={svg} />
-            <SearchInput placeholder={'Поиск по имени или e-mail'} onChange={e => searching(e.target.value)}/>
+            <SearchInput ref={ref} placeholder={'Поиск по имени или e-mail'}
+                         onChange={e => dispatch(setSearchStringAction(e.target.value))}/>
         </SearchStringContainer>
     );
 };
