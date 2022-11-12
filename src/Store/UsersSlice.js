@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-
 const initialState = {
     list: [],
     sortBy: null,
     searchBy: null,
-    page: 1,
+    currentPage: 1,
     isLoading: false,
     isPopupActive: false,
     deleteUser: null,
+    failFetch: false,
 }
 
 export const UsersSlice = createSlice({
@@ -17,6 +17,11 @@ export const UsersSlice = createSlice({
     reducers: {
         getList: (state, action) => {
             state.list = action.payload
+            return state
+        },
+        setFailFetchAction: (state) => {
+            state.failFetch = true
+            state.isLoading = false
             return state
         },
         deleteUserAction: (state, action) => {
@@ -30,7 +35,7 @@ export const UsersSlice = createSlice({
             return state
         },
         setSortTypeAction: (state, action) => {
-            if (state.sortBy === action.payload) {
+            if (state.sortBy === action.payload && !!state.sortBy) {
                 state.sortBy = action.payload + '-'
                 return state
             }
@@ -39,6 +44,23 @@ export const UsersSlice = createSlice({
         },
         load: (state, action) => {
             state.isLoading = action.payload
+            return state
+        },
+        incrementPageAction: (state, action) => {
+            if (state.currentPage < action.payload){
+                ++state.currentPage
+            }
+            return state
+        },
+        decrementPageAction: (state) => {
+            if (state.currentPage !== 1) {
+                --state.currentPage
+            }
+            return state
+        },
+        setPageAction: (state, action) => {
+            console.log(action.payload)
+            state.currentPage = action.payload
             return state
         },
         setIsPopupActiveAction: (state, action) => {
@@ -50,6 +72,15 @@ export const UsersSlice = createSlice({
     },
 })
 
-export const { getList, deleteUserAction, setSearchStringAction, setSortTypeAction, load, setIsPopupActiveAction } = UsersSlice.actions
+export const { getList,
+    deleteUserAction,
+    setSearchStringAction,
+    setSortTypeAction,
+    load,
+    setIsPopupActiveAction,
+    incrementPageAction,
+    decrementPageAction,
+    setPageAction,
+    setFailFetchAction } = UsersSlice.actions
 
 export default UsersSlice.reducer

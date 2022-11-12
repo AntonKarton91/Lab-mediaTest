@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import styled from "styled-components";
-import PaperComponent from "../UI/Paper.Component";
 import TopWindowComponent from "./TopWindow.Component";
 import SortComponent from "./Sort.Component";
 import BottomWindowComponent from "./BottomWindow.Component";
@@ -9,8 +8,6 @@ import {fetchUserList} from "../Store/acyncActions/listAcyncActions";
 import PopupComponent from "./Popup.Component";
 
 const Container = styled.div`
-  //width: 961px;
-  //height: 100%;
   margin: auto;
   top: 0;
   left: 27px;

@@ -1,7 +1,5 @@
 import axios from "axios";
-import {getList, load} from "../UsersSlice";
-import {useDispatch} from "react-redux";
-
+import {getList, load, setFailFetchAction} from "../UsersSlice";
 
 export const fetchUserList = () => {
     return function (dispatch){
@@ -11,7 +9,10 @@ export const fetchUserList = () => {
                 dispatch(load(false))
                 return dispatch(getList(response.data))
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error)
+                return dispatch(setFailFetchAction())
+            })
     }
 }
 

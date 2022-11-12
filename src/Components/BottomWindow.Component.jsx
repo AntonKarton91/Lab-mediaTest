@@ -3,14 +3,15 @@ import PaperComponent from "../UI/Paper.Component";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import DeleteButton from "../UI/DeleteButton";
-import {deleteUserAction, setIsPopupActiveAction} from "../Store/UsersSlice";
+import {setIsPopupActiveAction} from "../Store/UsersSlice";
+import PaginationMenuComponent from "./PaginationMenu.Component";
 
 const TableContainer = styled.div`
   position: absolute;
   top: 16px;
   left: 16px;
   right: 12px;
-  bottom: 0;
+  bottom: 0px;
   overflow-y: auto;
   background: transparent;
 `
@@ -57,8 +58,9 @@ const TableFirstItem = styled.td`
 const BottomWindowComponent = () => {
     const userList = useSelector(state => state.userList.list)
     const dispatch = useDispatch()
-    const {page, sortBy, searchBy, isLoading, deleteUser} = useSelector(state => state.userList)
-
+    const {currentPage, sortBy, searchBy, isLoading, deleteUser, failFetch} = useSelector(state => state.userList)
+    const [usersPerPage] = useState(5)
+    const [totalPages, setTotalPages] = useState(0)
 
     const getSortedList = useMemo(() => {
         if (sortBy) {
@@ -81,12 +83,22 @@ const BottomWindowComponent = () => {
             return getSortedList
                 .filter(item => String(item.username).toLowerCase().match(searchBy.toLowerCase())
                     || String(item.email).toLowerCase().match(searchBy.toLowerCase()))
-        } else return getSortedList
-    }
+        } else {
+            return getSortedList
+    }}
 
     useEffect(() => {
         getList()
     }, [deleteUser])
+
+    const lastUserIndex = currentPage * usersPerPage
+    const firstUserIndex = lastUserIndex - usersPerPage
+    const currentList = getList().slice(firstUserIndex, lastUserIndex)
+
+    useEffect(() => {
+        const pages = Math.ceil(getList().length / usersPerPage)
+        setTotalPages(pages)
+    }, [currentList])
 
     function popupActivate(userID) {
         dispatch(setIsPopupActiveAction({
@@ -95,8 +107,16 @@ const BottomWindowComponent = () => {
         }))
     }
 
+    function getDate(date) {
+        return new Date(date).toLocaleDateString('ru-RU', {day: 'numeric', month: 'numeric'}) + '.'
+                + String(new Date(date).getFullYear()).slice(2)
+    }
+
     return (
-        <PaperComponent top='263px' bottom={'0'}>
+        <PaperComponent top='263px' bottom={'50px'}>
+            {
+                failFetch && <div style={{backgroundColor: 'transparent', margin: '40px auto auto 10px'}}>Ошибка загрузки</div>
+            }
             {
                 isLoading ? <div style={{backgroundColor: 'transparent'}}>Loading...</div>
                     : <TableContainer>
@@ -111,14 +131,12 @@ const BottomWindowComponent = () => {
                             </thead>
                             <tbody style={{backgroundColor: 'transparent'}}>
                             {
-                                getList().map(row => {
+                                currentList.map(row => {
                                     return (
                                         <TableRow key={row.id}>
                                             <TableFirstItem>{row.username}</TableFirstItem>
                                             <TableItem>{row.email}</TableItem>
-                                            <TableItem>{new Date(row.registration_date)
-                                                .toLocaleDateString('ru-RU', {day: 'numeric', month: 'numeric'})}.
-                                                {String(new Date(row.registration_date).getFullYear()).slice(2)}</TableItem>
+                                            <TableItem>{getDate(row.registration_date)}</TableItem>
                                             <TableItem>{row.rating}</TableItem>
                                             <TableItem>
                                                 <div onClick={() => popupActivate(row.id)}
@@ -136,6 +154,7 @@ const BottomWindowComponent = () => {
                         </Table>
                     </TableContainer>
             }
+            <PaginationMenuComponent totalPages={totalPages}/>
 
         </PaperComponent>
     );

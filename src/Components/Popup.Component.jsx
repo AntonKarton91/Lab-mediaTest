@@ -45,11 +45,8 @@ const Buttons = styled.div`
   cursor: pointer;
   
 `
-
-
 const PopupComponent = () => {
     const dispatch = useDispatch()
-
 
     function deleteUser(){
         dispatch(deleteUserAction())

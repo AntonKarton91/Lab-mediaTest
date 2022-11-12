@@ -3,7 +3,7 @@ import PaperComponent from "../UI/Paper.Component";
 import SearchStringComponent from "./SearchString.Component";
 import styled from "styled-components";
 import svg from '../images/clean.svg'
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {setSearchStringAction, setSortTypeAction} from "../Store/UsersSlice";
 
 const CleanIcon = styled.img`
@@ -34,7 +34,6 @@ const CleanButton = styled.div`
 `
 
 const TopWindowComponent = () => {
-    const {sortBy} = useSelector(state => state.userList)
     const dispatch = useDispatch()
 
     function clean() {
