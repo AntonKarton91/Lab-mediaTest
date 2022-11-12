@@ -113,7 +113,7 @@ const BottomWindowComponent = () => {
     }
 
     return (
-        <PaperComponent top='263px' bottom={'50px'}>
+        <PaperComponent top='263px' bottom={'185px'}>
             {
                 failFetch && <div style={{backgroundColor: 'transparent', margin: '40px auto auto 10px'}}>Ошибка загрузки</div>
             }
